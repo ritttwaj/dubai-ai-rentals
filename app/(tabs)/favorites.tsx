@@ -1,4 +1,4 @@
-// app/(tabs)/index.tsx - HOME SCREEN WITH SAFE AREA
+// app/(tabs)/favorites.tsx - FAVORITES SCREEN WITH SAFE AREA
 
 import React from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
@@ -6,13 +6,13 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useProperties } from '../../hooks/useProperties';
 import { PropertyCard } from '../../components/properties/PropertyCard';
-import { PropertySearch } from '../../components/properties/PropertySearch';
 import { SPACING, FONT_SIZES, COLORS } from '../../utils/constants';
 
-export default function HomeScreen() {
-  const { getFilteredProperties } = useProperties();
+export default function FavoritesScreen() {
+  const { properties, favorites } = useProperties();
   const router = useRouter();
-  const properties = getFilteredProperties();
+  
+  const favoriteProperties = properties.filter(p => favorites.includes(p.id));
 
   const handlePropertyPress = (propertyId: number) => {
     router.push(`/property/${propertyId}`);
@@ -20,10 +20,8 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <PropertySearch />
-      
       <FlatList
-        data={properties}
+        data={favoriteProperties}
         renderItem={({ item }) => (
           <PropertyCard
             property={item}
@@ -34,14 +32,16 @@ export default function HomeScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <Text style={styles.header}>
-            Available Properties ({properties.length})
+            My Favorites ({favoriteProperties.length})
           </Text>
         }
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text style={styles.emptyIcon}>🏠</Text>
-            <Text style={styles.emptyText}>No properties found</Text>
-            <Text style={styles.emptySubtext}>Try adjusting your filters</Text>
+            <Text style={styles.emptyIcon}>💙</Text>
+            <Text style={styles.emptyText}>No favorites yet</Text>
+            <Text style={styles.emptySubtext}>
+              Tap the heart icon on properties you like
+            </Text>
           </View>
         }
       />
@@ -80,5 +80,6 @@ const styles = StyleSheet.create({
   emptySubtext: {
     fontSize: FONT_SIZES.md,
     color: COLORS.textSecondary,
+    textAlign: 'center',
   },
 });

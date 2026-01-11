@@ -1,33 +1,60 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { Text } from 'react-native';
+import { COLORS, FONT_SIZES } from '../../utils/constants';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+function TabBarIcon({ emoji, color }: { emoji: string; color: string }) {
+  return <Text style={{ fontSize: 24 }}>{emoji}</Text>;
+}
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.textSecondary,
+        tabBarStyle: {
+          paddingBottom: 8,
+          paddingTop: 8,
+          height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: FONT_SIZES.xs,
+          fontWeight: '600',
+        },
+        headerStyle: {
+          backgroundColor: COLORS.primary,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: '700',
+          fontSize: FONT_SIZES.lg,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Properties',
+          headerTitle: 'Dubai AI Rentals',
+          tabBarIcon: ({ color }) => <TabBarIcon emoji="🏠" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="favorites"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Favorites',
+          headerTitle: 'My Favorites',
+          tabBarIcon: ({ color }) => <TabBarIcon emoji="❤️" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          headerTitle: 'My Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon emoji="👤" color={color} />,
         }}
       />
     </Tabs>
